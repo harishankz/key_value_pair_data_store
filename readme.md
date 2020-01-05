@@ -2,7 +2,7 @@
 
 The Key Value Pair DataStore used to store data in as a File
 
-This Data store also supports time to live property, beyond which the data will be not available to read or delete.
+This Data store also supports time to live property, beyond which the data will be not available to read or to delete.
 
 This Data store also supports unique key mechanism.
 ## Getting Started
@@ -14,6 +14,8 @@ This Data store also supports unique key mechanism.
  The Maximum size of the value is 16 KB.
  
  The Maximum File size of the data store is 1GB.
+ 
+ The Time to live property should be given in seconds.
  
 
 ### Prerequisites

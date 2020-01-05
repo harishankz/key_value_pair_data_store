@@ -11,6 +11,7 @@ class KeyValuePair
   MAX_KEY_LENGTH = 32
   MAX_VALUE_SIZE = 16384
 
+  attr_accessor :file_path, :loaded_values
   #
   # initialize
   #
@@ -19,6 +20,10 @@ class KeyValuePair
   def initialize(file_path = nil)
     @file_path = file_path || Tempfile.new("key_value_pair").path
     load_hash_values
+  rescue Errno::ENOENT => e
+    puts "ERROR: The File path provided seems to be incorrect"
+  rescue => e
+    puts "ERROR: #{e}"
   end
 
   #
@@ -28,28 +33,38 @@ class KeyValuePair
     @loaded_values
   end
 
+
   #
   # create
   #
   # @param {Hash} new_key_value
   #
   def create(new_key_value)
-    validated_results = validate(new_key_value)
-    if validated_results[:code] == 200
-      CustomFileSystem.instance.open("#{@file_path}") do |f|
-        file_locked = is_file_lock(f)
-        return file_locked[:error_message] if file_locked
+    begin
+      validated_results = validate(new_key_value)
+      if validated_results[:code] == 200
+        CustomFileSystem.instance.open("#{@file_path}") do |f|
+          file_locked = is_file_lock(f)
+          return file_locked[:error_message] if file_locked
 
-        append_values = JSON.parse(new_key_value.values.first.to_json)
-        append_values[:expires_at] = Time.now + append_values["time_to_live"].to_i unless append_values["time_to_live"].nil?
-        new_key_value[new_key_value.keys.first] = append_values.to_json
+          append_values = JSON.parse(new_key_value.values.first.to_json)
+          append_values[:expires_at] = Time.now + append_values["time_to_live"].to_i unless append_values["time_to_live"].nil?
+          new_key_value[new_key_value.keys.first] = append_values.to_json
 
-        f.write("#{new_key_value.keys.first},\t#{new_key_value.values.first}\n");
+          f.write("#{new_key_value.keys.first},\t#{new_key_value.values.first}\n");
+        end
+        load_hash_values
+      else
+        puts "ERROR: #{validated_results[:error_message]}"
+        return validated_results
       end
-      load_hash_values
-    else
-      puts "ERROR: #{validated_results[:error_message]}"
-      return validated_results
+    rescue Errno::EACCES => e
+      return {code: 500, error_message: "The File path provided doesn't have write access"}
+    rescue Errno::ENOENT => e
+      return {code: 500, error_message: "The File path provided seems to be incorrect"}
+    rescue => e
+      puts "ERROR: #{e}"
+      return {code: 500, error_message: "Something went wrong"}
     end
   end
 
@@ -60,7 +75,7 @@ class KeyValuePair
   #
   def delete(key)
     finded_values = find_the_element(key)
-    return {code: 500, error_message: "The Entered Key Element not found."} if finded_values.nil?
+    return {code: 404, error_message: "The Entered Key Element not found."} if finded_values.nil?
 
     expires_at = get_expires_at(finded_values)
     return {code: 500, error_message: "The Sorry Time to Delete the data has been expired."} if expires_at && expires_at < Time.now

@@ -19,6 +19,8 @@ module CustomThreadSafe
     ensure
       @mutex.synchronize do
         file.close
+      rescue => e
+        raise (Errno::EACCES)
       end
     end
   end

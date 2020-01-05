@@ -92,4 +92,16 @@ class KeyValuePairTest < MiniTest::Unit::TestCase
     assert_equal 500, response[:code]
     assert_equal "The Given Value is not in Json Format.", response[:error_message]
   end
+
+  #
+  # test_with_invalid_file_path
+  #
+  def test_with_invalid_file_path
+    key_value_pair = KeyValuePair.new("/home/ghari/Documents/invalid_file_name.txt")
+    response = key_value_pair.create({test_create: {"json_key": "value"}})
+
+
+    assert_equal 500, response[:code]
+    assert_equal "The File path provided seems to be incorrect.", response[:error_message]
+  end
 end

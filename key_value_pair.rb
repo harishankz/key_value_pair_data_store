@@ -21,7 +21,7 @@ class KeyValuePair
     @file_path = file_path || Tempfile.new("key_value_pair").path
     load_hash_values
   rescue Errno::ENOENT => e
-    puts "ERROR: The File path provided seems to be incorrect"
+    puts "ERROR: The File path provided seems to be incorrect."
   rescue => e
     puts "ERROR: #{e}"
   end
@@ -59,12 +59,12 @@ class KeyValuePair
         return validated_results
       end
     rescue Errno::EACCES => e
-      return {code: 500, error_message: "The File path provided doesn't have write access"}
+      return {code: 500, error_message: "The File path provided doesn't have write access."}
     rescue Errno::ENOENT => e
-      return {code: 500, error_message: "The File path provided seems to be incorrect"}
+      return {code: 500, error_message: "The File path provided seems to be incorrect."}
     rescue => e
       puts "ERROR: #{e}"
-      return {code: 500, error_message: "Something went wrong"}
+      return {code: 500, error_message: "Something went wrong!!"}
     end
   end
 

@@ -1,8 +1,12 @@
-# KeyValuePair DataStore
+# Key Value Pair DataStore
 
-The KeyValue Pair DataStore used to store data in as a File
+The Key Value Pair DataStore used to store data in as a File
 
+This Data store also supports time to live property, beyond which the data will be not available to read or delete.
+
+This Data store also supports unique key mechanism.
 ## Getting Started
+    
  Language used is Ruby.
  
  The Maximum length of the Key is 32.

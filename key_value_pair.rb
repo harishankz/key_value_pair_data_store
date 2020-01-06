@@ -107,6 +107,7 @@ class KeyValuePair
   # @param {Hash} new_key_value
   #
   def validate(new_key_value)
+    return {code: 500, error_message: "The Given Parameter is not in valid format."} unless new_key_value.is_a?(Hash)
     return {code: 500, error_message: "The File Size has been exceeded."} unless valid_file_size()
     return {code: 500, error_message: "The Given Value is not in Json Format."} unless validate_value_as_json(new_key_value.values.first)
     return {code: 500, error_message: "The Key Length has been exceeded."} unless valid_key_length(new_key_value.keys.first)

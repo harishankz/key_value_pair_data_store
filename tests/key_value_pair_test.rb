@@ -104,4 +104,15 @@ class KeyValuePairTest < MiniTest::Unit::TestCase
     assert_equal 500, response[:code]
     assert_equal "The File path provided seems to be incorrect.", response[:error_message]
   end
+
+  #
+  # test_with_invalid_input
+  #
+  def test_with_invalid_input
+    response = @key_value_pair.create("Invalid input")
+
+
+    assert_equal 500, response[:code]
+    assert_equal "The Given Parameter is not in valid format.", response[:error_message]
+  end
 end

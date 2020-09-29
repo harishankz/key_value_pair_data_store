@@ -1,6 +1,8 @@
 # Key Value Pair DataStore
 
-The Key Value Pair DataStore used to store data in as a File Temporarily
+The Key Value Pair DataStore used to store data in as a File Temporarily.
+
+This Data store is ThreadSafe.
 
 This Data store also supports time to live property, beyond which the data will be not available to read or to delete.
 
